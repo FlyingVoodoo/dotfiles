@@ -1,0 +1,156 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 40,
+    "spacing": 0,
+
+    "modules-left": ["custom/power", "hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock", "custom/media"],
+    "modules-right": ["custom/keyboard", "pulseaudio", "network", "custom/gpu", "custom/sysinfo", "custom/uptime", "custom/updates", "custom/weather", "custom/github", "tray", "custom/swaync"],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "all-outputs": true,
+        "format-icons": {
+            "1": "1", "2": "2", "3": "3",
+            "4": "4", "5": "5",
+            "urgent": "", "active": "", "default": ""
+        }
+    },
+
+    "hyprland/window": {
+        "format": "  {}",
+        "max-length": 40,
+        "separate-outputs": true,
+        "rewrite": {
+            "(.*) — Zen Browser": "󰈹 $1",
+            "(.*) — Mozilla Firefox": "󰈹 $1",
+            "(.*) - Visual Studio Code": "󰨞 $1",
+            "kitty": "󰄛 kitty",
+            "Spotify Free": "󰓇 Spotify",
+            "Spotify": "󰓇 Spotify",
+            "": ""
+        }
+    },
+
+    "clock": {
+        "format": "󰥔 {:%H:%M}",
+        "format-alt": "󰃭 {:%d %b %Y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 muted",
+        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "on-click": "kitty --class pulsemixer -e pulsemixer",
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+        "tooltip-format": "{desc}"
+    },
+
+    "network": {
+        "format-wifi": "󰤨 {essid}",
+        "format-ethernet": "󰈀 Connected",
+        "format-disconnected": "󰤭 No network",
+        "tooltip-format": "󰩟 {ipaddr}\n󰛳 {gwaddr}",
+        "interval": 5
+    },
+
+    "custom/sysinfo": {
+        "exec": "~/.config/waybar/sysinfo.sh",
+        "interval": 3,
+        "return-type": "json",
+        "tooltip": true
+    },
+
+    "custom/gpu": {
+        "exec": "~/.config/waybar/gpu.sh",
+        "interval": 3,
+        "return-type": "json",
+        "tooltip": true
+    },
+
+    "custom/keyboard": {
+        "exec": "~/.config/waybar/keyboard.sh",
+        "interval": 1,
+        "return-type": "json",
+        "on-click": "hyprctl switchxkblayout all next",
+        "tooltip": true
+    },
+
+    "custom/uptime": {
+        "exec": "~/.config/waybar/uptime.sh",
+        "interval": 60,
+        "return-type": "json",
+        "tooltip": true
+    },
+
+    "custom/updates": {
+        "exec": "~/.config/waybar/updates.sh",
+        "interval": 3600,
+        "return-type": "json",
+        "on-click": "kitty -e sudo dnf upgrade",
+        "tooltip": true
+    },
+
+    "custom/media": {
+        "format": "{icon} {text}",
+        "return-type": "json",
+        "exec": "stdbuf -oL $HOME/.config/waybar/mediaplayer.py 2> /dev/null",
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "escape": true,
+        "format-icons": { "spotify": "󰓇", "default": "󰎇" }
+    },
+
+    "custom/weather": {
+        "format": "{}",
+        "tooltip": true,
+        "interval": 3600,
+        "exec": "curl -s 'wttr.in/Moscow?format=%c+%t'",
+        "on-click": "xdg-open https://wttr.in/Moscow"
+    },
+
+    "custom/power": {
+        "format": "󰐥",
+        "on-click": "wlogout",
+        "tooltip": false
+    },
+
+    "custom/github": {
+        "format": "󰊤 {}",
+        "return-type": "json",
+        "interval": 60,
+        "exec": "gh api notifications --jq 'length' | xargs -I {} echo '{\"text\":\"{}\"}'",
+        "on-click": "xdg-open https://github.com/notifications"
+    },
+
+    "custom/swaync": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "󰂚",
+            "none": "󰂜",
+            "dnd-notification": "󰂛",
+            "dnd-none": "󰪑",
+            "inhibited-notification": "󰂚",
+            "inhibited-none": "󰂜",
+            "dnd-inhibited-notification": "󰂛",
+            "dnd-inhibited-none": "󰪑"
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 6
+    }
+}
